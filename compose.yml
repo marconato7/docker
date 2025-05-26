@@ -2,7 +2,17 @@ services:
 
   wordpress:
     build:
+      cache_from:
+        - wordpress:latest
       context: .
+      dockerfile: Dockerfile
+      labels:
+        maintainer: John Doe
+        version: "1.0"
+      args:
+        WORDPRESS_SITE_NAME: "XPTO Blog"
+        WORDPRESS_ADMIN_EMAIL: "admin@blog.xpto"
+      target: development
     ports:
       - "8080:80"
     environment:
