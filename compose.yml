@@ -13,18 +13,43 @@ services:
         WORDPRESS_SITE_NAME: "XPTO Blog"
         WORDPRESS_ADMIN_EMAIL: "admin@blog.xpto"
       target: development
+    container_name: wordpress
+    environment:
+      WORDPRESS_DB_HOST: wordpressdb
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: MYSQL_ROOT_PASSWORD
+      WORDPRESS_DB_NAME: MYSQL_DATABASE
+    hostname: wordpress
+    networks:
+      wordpress_network:
+        ipv4_address: 192.168.1.2
     ports:
       - "8080:80"
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wp_user
-      WORDPRESS_DB_PASSWORD: wp_password
-      WORDPRESS_DB_NAME: wp_database
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
 
-  db:
-    image: mysql:latest
+  wordpressdb:
+    container_name: wordpressdb
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: root_password
-      MYSQL_USER: root_password
-      MYSQL_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: MYSQL_DATABASE
+      MYSQL_USER: MYSQL_USER
+      MYSQL_PASSWORD: MYSQL_PASSWORD
+    hostname: wordpressdb
+    image: mysql:latest
+    networks:
+      wordpress_network:
+        ipv4_address: 192.168.1.3
+    volumes:
+      - db_data:/var/lib/mysql
+
+networks:
+  wordpress_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+
+volumes:
+  db_data:
