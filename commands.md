@@ -82,3 +82,23 @@ docker build -t web-server -f .\web-server.Dockerfile .
 ```sh
 docker run -p 5000:5000 web-server
 ```
+
+```sh
+docker run -it -v ./docker/node:/usr/src/app -w /usr/src/app node bash
+```
+
+```sh
+docker run --rm --entrypoint bash -v ./docker/node:/usr/src/app -w /usr/src/app node -c "npm init -fy"
+```
+
+```sh
+docker login
+```
+
+```sh
+docker tag image-name namespace/image-name:0.0.1
+```
+
+```sh
+docker push namespace/image-name:0.0.1
+```
